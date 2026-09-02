@@ -1,32 +1,59 @@
-name: RaceDay Part 1 CI
+name: Part 1 - Validate Repository Structure
 
+# Runs on every push and pull request targeting main, and can also be triggered manually
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  validate-part1:
+  validate-docs:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check required files
+      - name: Check /docs folder exists
         run: |
-          test -f README.md
-          test -f "docs/RaceDay ERD.pdf"
-          test -f "docs/API Endpoint Plan.pdf"
-          test -f "docs/RaceDayDB.sql"
+          if [ ! -d "docs" ]; then
+            echo "ERROR: /docs folder is missing."
+            exit 1
+          fi
+          echo "docs folder found."
 
-      - name: Validate repository structure
+      - name: Check ERD file exists (PNG or PDF)
         run: |
-          test -d docs
-          test -d .github/workflows
+          if ! ls docs/*ERD*.png docs/*ERD*.pdf 1> /dev/null 2>&1; then
+            echo "ERROR: No ERD file (PNG or PDF) found in /docs."
+            exit 1
+          fi
+          echo "ERD file found."
 
-      - name: Part 1 validation successful
-        run: echo "RaceDay Part 1 repository structure is valid."  
+      - name: Check API Endpoint Plan exists (PDF or Markdown)
+        run: |
+          if ! ls docs/*Endpoint*Plan*.pdf docs/*Endpoint*Plan*.md 1> /dev/null 2>&1; then
+            echo "ERROR: No API Endpoint Plan file (PDF or Markdown) found in /docs."
+            exit 1
+          fi
+          echo "API Endpoint Plan file found."
+
+      - name: Check SQL script exists
+        run: |
+          if ! ls docs/*.sql 1> /dev/null 2>&1; then
+            echo "ERROR: No .sql script found in /docs."
+            exit 1
+          fi
+          echo "SQL script found."
+
+      - name: Check README exists at repo root
+        run: |
+          if [ ! -f "README.md" ]; then
+            echo "ERROR: README.md is missing at the repository root."
+            exit 1
+          fi
+          echo "README.md found."
+
+      - name: All Part 1 required files present
+        run: echo "✅ Repository structure meets Part 1 requirements."
