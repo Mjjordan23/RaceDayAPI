@@ -55,5 +55,4 @@ jobs:
           fi
           echo "README.md found."
 
-      - name: All Part 1 required files present
-        run: echo "✅ Repository structure meets Part 1 requirements."
+      
