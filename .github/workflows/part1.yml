@@ -1,6 +1,5 @@
 name: Part 1 - Validate Repository Structure
 
-# Runs on every push and pull request targeting main, and can also be triggered manually
 on:
   push:
     branches: [ main ]
@@ -11,6 +10,7 @@ on:
 jobs:
   validate-docs:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
 
       - name: Check ERD file exists (PNG or PDF)
         run: |
-          if ! ls docs/*ERD*.png docs/*ERD*.pdf 1> /dev/null 2>&1; then
+          if ! find docs -maxdepth 1 -type f \( -iname "*ERD*.png" -o -iname "*ERD*.pdf" \) | grep -q .; then
             echo "ERROR: No ERD file (PNG or PDF) found in /docs."
             exit 1
           fi
@@ -33,15 +33,15 @@ jobs:
 
       - name: Check API Endpoint Plan exists (PDF or Markdown)
         run: |
-          if ! ls docs/*Endpoint*Plan*.pdf docs/*Endpoint*Plan*.md 1> /dev/null 2>&1; then
+          if ! find docs -maxdepth 1 -type f \( -iname "*Endpoint*Plan*.pdf" -o -iname "*Endpoint*Plan*.md" \) | grep -q .; then
             echo "ERROR: No API Endpoint Plan file (PDF or Markdown) found in /docs."
             exit 1
           fi
           echo "API Endpoint Plan file found."
 
-      - name: Check SQL script exists
+      - name: Check SQL script exists (case-insensitive)
         run: |
-          if ! ls docs/*.sql 1> /dev/null 2>&1; then
+          if ! find docs -maxdepth 1 -type f -iname "*.sql" | grep -q .; then
             echo "ERROR: No .sql script found in /docs."
             exit 1
           fi
@@ -56,4 +56,9 @@ jobs:
           echo "README.md found."
 
       - name: All Part 1 required files present
-        run: echo "✅ Repository structure meets Part 1 requirements."
+        run: |
+          echo "=========================================="
+          echo "RaceDay Part 1 validation successful!"
+          echo "=========================================="
+          echo "All required files are present."
+          echo "Repository structure meets Part 1 requirements."
