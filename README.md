@@ -119,7 +119,7 @@ Run the script in SSMS to create the `RaceDayDB` database, tables, relationships
 
 Repository:
 
-**[Add your GitHub repository link here]**
+** https://github.com/Mjjordan23/RaceDayAPI **
 
 ---
 
@@ -144,7 +144,7 @@ The Part 1 presentation video demonstrates:
 * SQL database design
 * Running the SQL script in SQL Server Management Studio
 
-**[Add your unlisted YouTube presentation link here]**
+**https: //youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx **
 
 ---
 
