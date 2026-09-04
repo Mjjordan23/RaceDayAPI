@@ -129,7 +129,8 @@ GitHub Actions is used to validate the Part 1 repository structure and required 
 
 The successful GitHub Actions build is shown below:
 
-**[Insert screenshot of the green GitHub Actions build here]**
+**<img width="1882" height="955" alt="image" src="https://github.com/user-attachments/assets/57626631-9a23-4ed3-81de-9857a2368a01" />
+**
 
 ---
 
