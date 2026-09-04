@@ -144,7 +144,7 @@ The Part 1 presentation video demonstrates:
 * SQL database design
 * Running the SQL script in SQL Server Management Studio
 
-**https: //youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx **
+https: //youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx 
 
 
 
