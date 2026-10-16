@@ -101,10 +101,12 @@ https://youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx
 ---
 
 # Part 2 – RESTful API
+<img width="1887" height="998" alt="image" src="https://github.com/user-attachments/assets/ad1dcd70-f6d0-45f0-aafb-3cf3e03a8671" />
 
 ## Part 2 CI Build
 
-_Paste your green Part 2 GitHub Actions screenshot here._
+<img width="1907" height="910" alt="image" src="https://github.com/user-attachments/assets/b2f066d2-9966-4a07-8b34-00e5e6fa3aa4" />
+
 
 ## Part 2 Video
 
