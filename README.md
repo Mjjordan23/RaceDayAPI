@@ -110,7 +110,7 @@ https://youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx
 
 ## Part 2 Video
 
-_Paste your unlisted Part 2 YouTube link here._
+https://youtu.be/7oH1_a4stis?si=Sas0JunTeot5zlKP 
 
 ## How to Run It
 
