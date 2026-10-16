@@ -91,13 +91,13 @@ The `docs` folder holds the Part 1 documentation:
 3. Open `docs/RaceDayDB.sql` and execute it to create `RaceDayDB`.
 
 ### Part 1 CI Build
+<img width="1882" height="955" alt="Part 1 green build" src="https://github.com/user-attachments/assets/57626631-9a23-4ed3-81de-9857a2368a01" />
 
-<img width="1913" height="928" alt="image" src="https://github.com/user-attachments/assets/c785953b-38b6-45b7-b6b5-85a4b0687aa7" />
 
 
 ### Part 1 Video
 
-https://youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx
+<img width="1913" height="928" alt="image" src="https://github.com/user-attachments/assets/c785953b-38b6-45b7-b6b5-85a4b0687aa7" />
 
 ---
 
