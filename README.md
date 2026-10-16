@@ -91,13 +91,12 @@ The `docs` folder holds the Part 1 documentation:
 3. Open `docs/RaceDayDB.sql` and execute it to create `RaceDayDB`.
 
 ### Part 1 CI Build
+
 <img width="1882" height="955" alt="Part 1 green build" src="https://github.com/user-attachments/assets/57626631-9a23-4ed3-81de-9857a2368a01" />
-
-
 
 ### Part 1 Video
 
-<img width="1913" height="928" alt="image" src="https://github.com/user-attachments/assets/c785953b-38b6-45b7-b6b5-85a4b0687aa7" />
+https://youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx
 
 ---
 
@@ -105,8 +104,7 @@ The `docs` folder holds the Part 1 documentation:
 
 ## Part 2 CI Build
 
-<img width="1907" height="970" alt="image" src="https://github.com/user-attachments/assets/f2bf1b36-7e47-484c-86e1-2c749aa2fce5" />
-
+_Paste your green Part 2 GitHub Actions screenshot here._
 
 ## Part 2 Video
 
@@ -215,3 +213,4 @@ xUnit.net (n.d.) *Getting started with xUnit.net*. Available at: https://xunit.n
 GitHub (n.d.) *GitHub Actions documentation*. Available at: https://docs.github.com/actions (Accessed: 16 October 2026).
 
 Anthropic (2026) *Claude* [Large language model]. Available at: https://claude.ai (Accessed: 16 October 2026).
+
