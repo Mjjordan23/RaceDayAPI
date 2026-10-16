@@ -104,7 +104,8 @@ https://youtu.be/xqkAifArZuE?si=BW7L3xj2nHk8E0fx
 
 ## Part 2 CI Build
 
-_Paste your green Part 2 GitHub Actions screenshot here._
+<img width="1907" height="970" alt="image" src="https://github.com/user-attachments/assets/f2bf1b36-7e47-484c-86e1-2c749aa2fce5" />
+
 
 ## Part 2 Video
 
