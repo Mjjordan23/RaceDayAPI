@@ -197,11 +197,16 @@ https://youtu.be/7oH1_a4stis?si=Sas0JunTeot5zlKP
 
 # Part 3 – MVC Web App, Image Storage and Docker
 
-`RaceDay.Web` is an ASP.NET Core 8 MVC front end. It has **no database access**: every page calls the Part 2 API through `Services/ApiService.cs`.
+<img width="1892" height="941" alt="image" src="https://github.com/user-attachments/assets/2879b183-8d70-409b-a588-df0325c0c878" />
+<img width="1912" height="876" alt="image" src="https://github.com/user-attachments/assets/513b0eca-1a63-4f35-976a-23394ae57931" />
+
+
+
 
 ### Part 3 CI Build
 
-_Paste your green Part 3 GitHub Actions screenshot here (drag the image into the GitHub editor)._
+<img width="1908" height="970" alt="image" src="https://github.com/user-attachments/assets/4c680086-3800-46d3-ac9d-17c2fb2d0ad6" />
+
 
 ### Part 3 Video
 https://youtu.be/4JF75POuEWw?si=WZ9ysLYMp0BEeffE 
