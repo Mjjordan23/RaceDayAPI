@@ -5,7 +5,7 @@
 **Name:** Murendeni Nethenzheni
 **Student Number:** ST10396326
 **Module:** PROG6212 – Programming 2B
-**Assessment:** Portfolio of Evidence – Part 1 (System Planning and Database) and Part 2 (RESTful API)
+**Assessment:** Portfolio of Evidence – Part 1 (System Planning and Database), Part 2 (RESTful API) and Part 3 (MVC Web App, Image Storage and Docker)
 **Repository:** https://github.com/Mjjordan23/RaceDayAPI
 
 ---
@@ -16,7 +16,7 @@ RaceDay is a full-stack event management platform designed for South African run
 
 **Organisers** create and manage sporting events, categories, enrolments, and race results. **Participants** create accounts, browse events, enter events by category, view their enrolments, and track their personal results.
 
-Part 1 covered the planning and database design. Part 2 is the ASP.NET Core Web API built from that plan.
+Part 1 covered the planning and database design. Part 2 is the ASP.NET Core Web API built from that plan. Part 3 adds an ASP.NET Core MVC website that uses the API, image uploads, and a Docker container.
 
 ---
 
@@ -44,13 +44,15 @@ Anyone, even when logged out, can browse events, categories, and published resul
 
 | Area           | Choice                                                                        |
 | -------------- | ----------------------------------------------------------------------------- |
-| Framework      | ASP.NET Core 8 Web API (C#)                                                   |
+| Framework      | ASP.NET Core 8 Web API and ASP.NET Core 8 MVC (C#)                            |
+| Front end      | Razor views, Bootstrap 5, custom RaceDay theme                                |
+| Containers     | Docker (multi-stage build for the MVC app)                                    |
 | Database       | SQL Server, EF Core 8 Code-First migrations                                   |
 | Authentication | Server-side sessions; passwords hashed with `PasswordHasher<User>`            |
 | Authorisation  | Custom `[RequireRole]` filter: 401 if not logged in, 403 if the role is wrong |
 | Documentation  | Swagger (Swashbuckle) using XML comments                                      |
 | Testing        | xUnit, EF InMemory provider, `WebApplicationFactory` integration tests        |
-| CI             | GitHub Actions: restore, build, and test                                      |
+| CI             | GitHub Actions: restore, build, test, and Docker build                        |
 | Tools          | Visual Studio, SQL Server Management Studio, GitHub                           |
 
 ---
@@ -61,7 +63,8 @@ Anyone, even when logged out, can browse events, categories, and published resul
 RaceDayAPI/
 ├── .github/workflows/
 │   ├── part1-ci.yml
-│   └── part2-ci.yml
+│   ├── part2-ci.yml
+│   └── part3-ci.yml
 ├── docs/
 │   ├── RaceDay ERD
 │   ├── API Endpoint Plan
@@ -70,6 +73,8 @@ RaceDayAPI/
 │   └── Web API source files
 ├── RaceDayAPI.Tests/
 │   └── Unit and integration tests
+├── RaceDay.Web/
+│   └── MVC website (Controllers, Views, Services, Filters, ViewModels, Dockerfile)
 ├── RaceDayAPI.sln
 └── README.md
 ```
@@ -124,17 +129,11 @@ https://youtu.be/7oH1_a4stis?si=Sas0JunTeot5zlKP
    "DefaultConnection": "Server=YOUR_SERVER\\SQLEXPRESS;Database=RaceDayDB;Trusted_Connection=True;TrustServerCertificate=True;"
    ```
 
-3. Create the database from the migrations:
-
-   ```bash
-   dotnet ef database update --project RaceDayAPI
-   ```
-
-   Alternatively, use `Update-Database` in the Package Manager Console.
+3. Create the database. In Development the API creates `RaceDayDB` and its tables automatically the first time it starts. Alternatively, run `docs/RaceDayDB.sql` in SQL Server Management Studio.
 
 4. Run the API using `dotnet run --project RaceDayAPI` or press F5 in Visual Studio.
 
-5. Open Swagger at `https://localhost:7254/swagger`.
+5. Open Swagger at `http://localhost:5254/swagger`.
 
 6. Run the tests:
 
@@ -178,7 +177,7 @@ https://youtu.be/7oH1_a4stis?si=Sas0JunTeot5zlKP
 
 ## Differences from My Part 1 Plan
 
-* **`POST /api/events/{id}/banner` is not in Part 2.** Image upload needs Azure Blob Storage, which belongs to Part 3. The `BannerImageUrl` column already exists.
+* **`POST /api/events/{id}/banner` is not in Part 2.** Image upload belongs to Part 3, where it was added together with `POST /api/users/me/profile-picture` and `GET /api/events/mine`.
 * **Extra 409 responses on delete.** Deleting an event or category that still has enrolments returns 409 with a message instead of a database error.
 * **Extra filters on `GET /api/events`:** `type` (Run, Walk, Cycle), `search`, and `upcomingOnly`.
 * Category routes use `{eventId}` instead of `{id}` for clarity.
@@ -196,9 +195,46 @@ https://youtu.be/7oH1_a4stis?si=Sas0JunTeot5zlKP
 
 ---
 
+# Part 3 – MVC Web App, Image Storage and Docker
+
+`RaceDay.Web` is an ASP.NET Core 8 MVC front end. It has **no database access**: every page calls the Part 2 API through `Services/ApiService.cs`.
+
+### Part 3 CI Build
+
+_Paste your green Part 3 GitHub Actions screenshot here (drag the image into the GitHub editor)._
+
+### Part 3 Video
+
+_Paste your unlisted YouTube link here._
+
+### How it fits together
+- Login calls `POST api/auth/login`. The MVC app keeps the user's ID, role and the API's session cookie in its own session (cookie `.RaceDayWeb.Session`).
+- `[RequireLogin]` / `[RequireLogin("Organiser")]` filters (in `Filters/`) send logged-out users to the login page and block the wrong role.
+- Image uploads go MVC → API → the API saves them in its `wwwroot/uploads` folder (as allowed by the lecturer) and serves them as static files. The MVC app turns the stored `/uploads/...` path into a full address using `ApiSettings:PublicBaseUrl`.
+- Menus differ per role: Organisers see Dashboard, My events, Categories, Enrolments, Results; Participants see Find an event, My events, My results.
+
+### Run it locally
+1. Run **RaceDayAPI** from Visual Studio (http profile, `http://localhost:5254`).
+2. Nothing else to configure for images: they are saved to `RaceDayAPI/wwwroot/uploads` automatically.
+3. In `RaceDay.Web/appsettings.json` check `"ApiSettings": { "BaseUrl": "http://localhost:5254/" }` matches your API port.
+4. Run **RaceDay.Web** (`dotnet run --project RaceDay.Web`).
+
+### Run it in Docker
+```
+cd RaceDay.Web
+docker build -t raceday-web .
+docker run -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal:5254/ raceday-web
+```
+Then open http://localhost:8080. The API keeps running from Visual Studio. If the container cannot reach it, change the API's `applicationUrl` in `launchSettings.json` to `http://*:5254` and allow it through Windows Firewall.
+
+### Image storage
+Images are stored locally in the API's `wwwroot/uploads` folder. (An Azure Blob implementation is also included; set `"Storage": { "Provider": "Azure" }` and an `AzureBlob:ConnectionString` in User Secrets to switch to it.) Note: `wwwroot/uploads` is git-ignored, so uploaded files are not committed.
+
+---
+
 ## AI Usage Disclosure
 
-I used Claude (Anthropic) as an assistant during this project. It helped me to organise the Part 1 documents and reference list, plan and structure the Part 2 controllers, suggest unit and integration tests, tidy the Swagger comments, and draft this README and my video notes. I ran, tested, and corrected the project myself, I can explain the code, and the videos are recorded in my own voice.
+I used Claude (Anthropic) as an assistant during this project. It helped me to organise the Part 1 documents and reference list, plan and structure the Part 2 controllers, suggest unit and integration tests, tidy the Swagger comments, and draft this README and my video notes. For Part 3 it also helped me build the MVC website, the image upload, and the Docker setup. I ran, tested, and corrected the project myself, I can explain the code, and the videos are recorded in my own voice.
 
 ## References
 
@@ -213,6 +249,12 @@ Microsoft (n.d.) *Session and state management in ASP.NET Core*. Available at: h
 xUnit.net (n.d.) *Getting started with xUnit.net*. Available at: https://xunit.net/ (Accessed: 16 October 2026).
 
 GitHub (n.d.) *GitHub Actions documentation*. Available at: https://docs.github.com/actions (Accessed: 16 October 2026).
+
+Microsoft (n.d.) *ASP.NET Core MVC overview*. Available at: https://learn.microsoft.com/aspnet/core/mvc/overview (Accessed: 9 November 2026).
+
+Docker (n.d.) *Docker documentation*. Available at: https://docs.docker.com/ (Accessed: 9 November 2026).
+
+Bootstrap (n.d.) *Bootstrap 5.3 documentation*. Available at: https://getbootstrap.com/docs/5.3/ (Accessed: 9 November 2026).
 
 Anthropic (2026) *Claude* [Large language model]. Available at: https://claude.ai (Accessed: 16 October 2026).
 
