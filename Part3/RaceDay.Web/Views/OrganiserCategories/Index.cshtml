@@ -1,0 +1,73 @@
+@model CategoriesPageViewModel
+@{ ViewData["Title"] = "Categories"; }
+<h1 class="rd-title">Categories</h1>
+<partial name="_EventPicker" model="Model" />
+@if (Model.SelectedEventId is int eventId)
+{
+    <div class="row g-4">
+        <div class="col-lg-7">
+            @if (!Model.Categories.Any())
+            {
+                <div class="rd-empty">No categories yet. Add the first one.</div>
+            }
+            else
+            {
+                <div class="card rd-card">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Ages</th><th>Distance</th><th></th></tr></thead>
+                            <tbody>
+                            @foreach (var c in Model.Categories)
+                            {
+                                <tr>
+                                    <td>@c.Name</td>
+                                    <td>@Fmt.AgeRange(c.MinAge, c.MaxAge)</td>
+                                    <td>@(c.DistanceKm.HasValue ? c.DistanceKm.Value.ToString("0.#") + " km" : "—")</td>
+                                    <td class="text-end">
+                                        <form asp-action="Delete" method="post" data-confirm="Delete category '@c.Name'?">
+                                            <input type="hidden" name="eventId" value="@eventId" />
+                                            <input type="hidden" name="id" value="@c.CategoryID" />
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-lg-5">
+            <div class="card rd-card p-3">
+                <h2 class="h5">Add a category</h2>
+                <form asp-action="Add" method="post" novalidate>
+                    <input type="hidden" name="eventId" value="@eventId" />
+                    <div class="mb-2">
+                        <label asp-for="NewCategory.Name" class="form-label"></label>
+                        <input asp-for="NewCategory.Name" class="form-control" placeholder="e.g. Under 18" />
+                        <span asp-validation-for="NewCategory.Name" class="text-danger small"></span>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label asp-for="NewCategory.MinAge" class="form-label"></label>
+                            <input asp-for="NewCategory.MinAge" type="number" class="form-control" />
+                            <span asp-validation-for="NewCategory.MinAge" class="text-danger small"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="NewCategory.MaxAge" class="form-label"></label>
+                            <input asp-for="NewCategory.MaxAge" type="number" class="form-control" />
+                            <span asp-validation-for="NewCategory.MaxAge" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label asp-for="NewCategory.DistanceKm" class="form-label"></label>
+                        <input asp-for="NewCategory.DistanceKm" type="number" step="0.1" class="form-control" />
+                        <span asp-validation-for="NewCategory.DistanceKm" class="text-danger small"></span>
+                    </div>
+                    <button class="btn btn-rd mt-3 w-100" type="submit">Add category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}

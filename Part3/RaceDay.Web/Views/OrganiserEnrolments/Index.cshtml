@@ -1,0 +1,33 @@
+@model EnrolmentsPageViewModel
+@{ ViewData["Title"] = "Enrolments"; }
+<h1 class="rd-title">Enrolments</h1>
+<partial name="_EventPicker" model="Model" />
+@if (Model.SelectedEventId is not null)
+{
+    if (!Model.Enrolments.Any())
+    {
+        <div class="rd-empty">Nobody has entered this event yet.</div>
+    }
+    else
+    {
+        <p class="rd-meta">@Model.Enrolments.Count enrolment(s)</p>
+        <div class="card rd-card">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead><tr><th>Participant</th><th>Category</th><th>Entered</th><th>Status</th></tr></thead>
+                    <tbody>
+                    @foreach (var e in Model.Enrolments)
+                    {
+                        <tr>
+                            <td>@e.ParticipantName</td>
+                            <td>@e.CategoryName</td>
+                            <td>@Fmt.ShortDate(e.EnrolledAt)</td>
+                            <td><partial name="_StatusBadge" model="e.Status" /></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

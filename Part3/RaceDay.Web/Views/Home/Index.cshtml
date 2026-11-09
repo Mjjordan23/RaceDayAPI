@@ -1,0 +1,53 @@
+@model HomeViewModel
+@{ ViewData["Title"] = "Find an event"; }
+
+<section class="rd-hero mb-4">
+    <h1 class="rd-title">Find your next start line</h1>
+    <p>Running, walking and cycling events across South Africa.</p>
+</section>
+
+<form method="get" class="card rd-card p-3 mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label" for="search">Search</label>
+            <input id="search" name="search" value="@Model.Search" class="form-control" placeholder="Name or place" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="type">Type</label>
+            <select id="type" name="type" class="form-select">
+                <option value="">All types</option>
+                @foreach (var t in new[] { "Run", "Walk", "Cycle" })
+                {
+                    <option value="@t" selected="@(Model.Type == t)">@Fmt.TypeIcon(t) @t</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="upcomingOnly" name="upcomingOnly" value="true" checked="@Model.UpcomingOnly" />
+                <input type="hidden" name="upcomingOnly" value="false" />
+                <label class="form-check-label" for="upcomingOnly">Upcoming only</label>
+            </div>
+        </div>
+        <div class="col-md-2 d-grid"><button class="btn btn-rd" type="submit">Filter</button></div>
+    </div>
+</form>
+
+@if (!Model.Events.Any())
+{
+    <div class="rd-empty text-center">
+        <p class="mb-1"><strong>No events match your filters.</strong></p>
+        <p class="mb-0">Try a different type or clear the search.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var ev in Model.Events)
+        {
+            <div class="col-md-6 col-lg-4">
+                <partial name="_EventCard" model="ev" />
+            </div>
+        }
+    </div>
+}

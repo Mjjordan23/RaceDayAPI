@@ -1,0 +1,39 @@
+@model List<MyEventDto>
+@{ ViewData["Title"] = "My events"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="rd-title mb-0">My events</h1>
+    <a class="btn btn-rd" asp-action="Create">+ New event</a>
+</div>
+@if (!Model.Any())
+{
+    <div class="rd-empty text-center"><p class="mb-0">No events yet. Create one to get started.</p></div>
+}
+else
+{
+    <div class="card rd-card">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Location</th><th>Categories</th><th>Enrolments</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@Fmt.TypeIcon(e.EventType) @e.Name</td>
+                        <td>@Fmt.ShortDate(e.EventDate)</td>
+                        <td>@e.Location</td>
+                        <td>@e.CategoryCount</td>
+                        <td>@e.EnrolmentCount</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-rd" asp-action="Edit" asp-route-id="@e.EventID">Edit</a>
+                            <a class="btn btn-sm btn-outline-rd" asp-controller="OrganiserCategories" asp-action="Index" asp-route-eventId="@e.EventID">Categories</a>
+                            <form asp-action="Delete" asp-route-id="@e.EventID" method="post" class="d-inline" data-confirm="Delete '@e.Name'? This cannot be undone.">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

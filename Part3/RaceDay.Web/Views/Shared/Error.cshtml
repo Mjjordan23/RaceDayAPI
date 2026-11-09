@@ -1,0 +1,6 @@
+@{ ViewData["Title"] = "Oops"; }
+<div class="rd-empty text-center py-5">
+    <h1 class="rd-title">@(ViewBag.Heading ?? "Something went wrong")</h1>
+    <p class="lead">@(ViewBag.Detail ?? "Sorry, we could not complete that. Please try again.")</p>
+    <a class="btn btn-rd" asp-controller="Home" asp-action="Index">Back to home</a>
+</div>

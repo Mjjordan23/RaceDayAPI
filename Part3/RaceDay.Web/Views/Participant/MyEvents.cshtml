@@ -1,0 +1,32 @@
+@model List<MyEnrolmentDto>
+@{ ViewData["Title"] = "My events"; }
+<h1 class="rd-title">My events</h1>
+@if (!Model.Any())
+{
+    <div class="rd-empty text-center">
+        <p>You have not entered any events yet.</p>
+        <a class="btn btn-rd" asp-controller="Home" asp-action="Index">Find an event</a>
+    </div>
+}
+else
+{
+    <div class="card rd-card">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@e.EventName</td>
+                        <td>@Fmt.Date(e.EventDate)</td>
+                        <td>@e.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                        <td class="text-end"><a class="btn btn-sm btn-outline-rd" asp-controller="Events" asp-action="Details" asp-route-id="@e.EventID">View</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

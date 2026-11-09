@@ -1,0 +1,36 @@
+@model List<MyResultDto>
+@{ ViewData["Title"] = "My results"; }
+<h1 class="rd-title">My results</h1>
+@if (!Model.Any())
+{
+    <div class="rd-empty text-center">
+        <p class="mb-0">No results yet. Once an organiser captures your finish time it will appear here.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var r in Model)
+        {
+            <div class="col-md-6">
+                <div class="card rd-card p-3 h-100">
+                    <h5 class="mb-1">@r.EventName</h5>
+                    <p class="rd-meta mb-3">@Fmt.ShortDate(r.EventDate) · @r.CategoryName</p>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <div class="rd-stat">@Fmt.Time(r.FinishTime)</div>
+                            <div class="rd-meta">Finish time</div>
+                        </div>
+                        <div class="text-end">
+                            @if (r.FinishPosition.HasValue)
+                            {
+                                <div class="rd-stat">@Fmt.Ordinal(r.FinishPosition.Value)</div>
+                                <div class="rd-meta">of @r.TotalFinishers</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

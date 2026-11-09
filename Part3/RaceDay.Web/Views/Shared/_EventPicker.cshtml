@@ -1,0 +1,24 @@
+@model EventScopedViewModel
+@* Drop-down that lets the Organiser choose which of their events a page is about. *@
+@if (!Model.Events.Any())
+{
+    <div class="rd-empty">
+        <p class="mb-2">You have not created an event yet.</p>
+        <a class="btn btn-rd" asp-controller="OrganiserEvents" asp-action="Create">Create your first event</a>
+    </div>
+}
+else
+{
+    <form method="get" class="row g-2 align-items-end mb-4">
+        <div class="col-md-8">
+            <label class="form-label" for="eventId">Event</label>
+            <select id="eventId" name="eventId" class="form-select" data-autosubmit>
+                @foreach (var e in Model.Events)
+                {
+                    <option value="@e.EventID" selected="@(e.EventID == Model.SelectedEventId)">@e.Name · @Fmt.ShortDate(e.EventDate)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4"><button class="btn btn-outline-rd" type="submit">Show</button></div>
+    </form>
+}

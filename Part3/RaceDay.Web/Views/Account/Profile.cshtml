@@ -1,0 +1,77 @@
+@model ProfileViewModel
+@{ ViewData["Title"] = "My profile"; var isParticipant = Model.Role == "Participant"; }
+<h1 class="rd-title">My profile</h1>
+<div class="row g-4">
+    @if (isParticipant)
+    {
+        <div class="col-md-4">
+            <div class="card rd-card p-4 text-center">
+                @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                {
+                    <img src="@Fmt.ImageUrl(Model.ProfilePictureUrl)" class="rd-avatar mx-auto mb-3" alt="Your profile picture" />
+                }
+                else
+                {
+                    <div class="rd-avatar rd-avatar-empty mx-auto mb-3">👤</div>
+                }
+                <form asp-action="ProfilePicture" method="post" enctype="multipart/form-data">
+                    <input type="file" name="picture" accept="image/png,image/jpeg,image/webp" class="form-control mb-2" required />
+                    <button class="btn btn-outline-rd w-100" type="submit">Upload picture</button>
+                    <div class="form-text">JPG, PNG or WebP, up to 5 MB.</div>
+                </form>
+            </div>
+        </div>
+    }
+    <div class="@(isParticipant ? "col-md-8" : "col-md-8 offset-md-2")">
+        <div class="card rd-card p-4">
+            <form asp-action="Profile" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" value="@Model.Email" disabled />
+                </div>
+                @if (isParticipant)
+                {
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DateOfBirth" class="form-label"></label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="OrganisationName" class="form-label"></label>
+                            <input asp-for="OrganisationName" class="form-control" />
+                            <span asp-validation-for="OrganisationName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ContactNumber" class="form-label"></label>
+                            <input asp-for="ContactNumber" class="form-control" />
+                            <span asp-validation-for="ContactNumber" class="text-danger small"></span>
+                        </div>
+                    </div>
+                }
+                <button class="btn btn-rd mt-4" type="submit">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>

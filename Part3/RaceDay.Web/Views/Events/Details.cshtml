@@ -1,0 +1,73 @@
+@model EventDetailsViewModel
+@{
+    var ev = Model.Event;
+    ViewData["Title"] = ev.Name;
+    var role = Context.Session.GetRole();
+}
+<a asp-controller="Home" asp-action="Index" class="small">← All events</a>
+<div class="card rd-card mt-2 mb-4 overflow-hidden">
+    @if (!string.IsNullOrEmpty(ev.BannerImageUrl))
+    {
+        <img src="@Fmt.ImageUrl(ev.BannerImageUrl)" class="rd-banner rd-banner-lg" alt="Banner for @ev.Name" />
+    }
+    <div class="card-body">
+        <span class="rd-type">@Fmt.TypeIcon(ev.EventType) @ev.EventType</span>
+        <h1 class="rd-title mt-1">@ev.Name</h1>
+        <p class="rd-meta mb-1">📅 @Fmt.Date(ev.EventDate)</p>
+        <p class="rd-meta mb-1">📍 @ev.Location</p>
+        <p class="rd-meta">📏 @ev.DistanceKm.ToString("0.#") km</p>
+        <p>@ev.Description</p>
+    </div>
+</div>
+
+<h2 class="rd-title h3">Categories</h2>
+@if (!ev.Categories.Any())
+{
+    <div class="rd-empty">No categories have been added to this event yet.</div>
+}
+else if (Model.MyEnrolment is not null)
+{
+    <div class="alert alert-info d-flex align-items-center gap-2">
+        You are entered in <strong>@Model.MyEnrolment.CategoryName</strong>
+        <partial name="_StatusBadge" model="Model.MyEnrolment.Status" />
+    </div>
+}
+else if (!ev.IsUpcoming)
+{
+    <div class="rd-empty">This event has already taken place.</div>
+}
+else if (role == "Organiser")
+{
+    <div class="rd-empty">Organisers cannot enter events. Log in as a Participant to enrol.</div>
+}
+else if (role != "Participant")
+{
+    <div class="alert alert-warning">Please <a asp-controller="Account" asp-action="Login">log in</a> or <a asp-controller="Account" asp-action="Register">sign up</a> as a Participant to enter this event.</div>
+}
+
+@if (ev.Categories.Any())
+{
+    <div class="row g-3 mt-1">
+        @foreach (var c in ev.Categories)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card rd-card p-3 h-100">
+                    <h5>@c.Name</h5>
+                    <p class="rd-meta mb-1">Ages: @Fmt.AgeRange(c.MinAge, c.MaxAge)</p>
+                    @if (c.DistanceKm.HasValue)
+                    {
+                        <p class="rd-meta mb-2">📏 @c.DistanceKm.Value.ToString("0.#") km</p>
+                    }
+                    @if (role == "Participant" && Model.MyEnrolment is null && ev.IsUpcoming)
+                    {
+                        <form asp-action="Enrol" method="post" class="mt-auto">
+                            <input type="hidden" name="eventId" value="@ev.EventID" />
+                            <input type="hidden" name="categoryId" value="@c.CategoryID" />
+                            <button class="btn btn-rd w-100" type="submit">Enter this category</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
